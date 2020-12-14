@@ -1,8 +1,8 @@
-%global __cmake_in_source_build
+%global __cmake_in_source_build 1
 
 Name:           onednn
 Version:        1.6
-Release:        1%{?dist}
+Release:        1
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
@@ -95,5 +95,5 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 
 %changelog
 
-* Sun Dec 13 2020 sinever <sinever@126.com> - 1.6
+* Sun Dec 13 2020 sinever <sinever@126.com> - 1.6-1
 - Initial spec file.
