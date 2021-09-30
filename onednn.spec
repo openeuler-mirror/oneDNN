@@ -1,7 +1,7 @@
 %global __cmake_in_source_build 1
 
 Name:           onednn
-Version:        1.6
+Version:        2.2
 Release:        1
 Summary:        Deep Neural Network Library
 
@@ -12,9 +12,7 @@ Source0:        %{url}/archive/v%{version}/onednn-%{version}.tar.gz
 # This package only work in few arches for now
 ExclusiveArch:  x86_64 aarch64 ppc64le
 
-BuildRequires:  cmake
-BuildRequires:  doxygen
-BuildRequires:  gcc-c++
+BuildRequires:  cmake doxygen gcc-c++
 
 # Optionals not yet enabled
 #BuildRequires:  pkgconfig(OpenCL)
@@ -60,6 +58,8 @@ mkdir -p build && cd build
 
 %make_build
 
+%check
+ctest
 
 %install
 cd build
@@ -76,15 +76,17 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 %files
 %license LICENSE THIRD-PARTY-PROGRAMS
 %doc README.md CONTRIBUTING.md CODE_OF_CONDUCT.md
-%{_libdir}/libdnnl.so.1
-%{_libdir}/libdnnl.so.1.*
-%{_libdir}/libmkldnn.so.1
-%{_libdir}/libmkldnn.so.1.*
+%{_libdir}/libdnnl.so.2
+%{_libdir}/libdnnl.so.2.*
+%{_libdir}/libmkldnn.so.2
+%{_libdir}/libmkldnn.so.2.*
 
 
 %files devel
 %{_includedir}/mkldnn*.h*
 %{_includedir}/dnnl*.h*
+%dir %{_includedir}/oneapi/dnnl
+%{_includedir}/oneapi/dnnl/*
 %{_libdir}/libdnnl.so
 %{_libdir}/libmkldnn.so
 %dir %{_libdir}/cmake/dnnl
@@ -95,5 +97,7 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 
 %changelog
 
+* Wed Sep 30 2021 baihuawei <baihuawei@huawei.com> - 2.2-1
+- Update to 2.2 to match latest MindSpore.
 * Sun Dec 13 2020 sinever <sinever@126.com> - 1.6-1
 - Initial spec file.
