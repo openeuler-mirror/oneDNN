@@ -2,12 +2,17 @@
 
 Name:           onednn
 Version:        2.2
-Release:        1
+Release:        2
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
 URL:            https://github.com/oneapi-src/oneDNN/
 Source0:        %{url}/archive/v%{version}/onednn-%{version}.tar.gz
+
+Patch0:         0001-tests-fix-build-issues-on-QNX.patch
+Patch1:         0002-build-fix-to-include-path-for-ArmPL-builds.-1111.patch
+Patch2:         0003-cpu-aarch64-missing-include-for-arm_compute-Schedule.patch
+Patch3:         0004-cpu-x64-amx-Remove-errorneous-use-of-UINT8_C.patch
 
 # This package only work in few arches for now
 ExclusiveArch:  x86_64 aarch64 ppc64le
@@ -96,7 +101,8 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 
 
 %changelog
-
+* Wed Dec 1 2021 baihuawei <baihuawei@huawei.com> - 2.2-2
+- Fix bugs.
 * Wed Sep 30 2021 baihuawei <baihuawei@huawei.com> - 2.2-1
 - Update to 2.2 to match latest MindSpore.
 * Sun Dec 13 2020 sinever <sinever@126.com> - 1.6-1

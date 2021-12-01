@@ -1,0 +1,28 @@
+From 6067e2fd599b1133c0d7b404fe7a1ca0e04432b0 Mon Sep 17 00:00:00 2001
+From: Isuru Fernando <isuruf@gmail.com>
+Date: Mon, 8 Mar 2021 11:22:22 -0600
+Subject: [PATCH 4/4] cpu: x64: amx: Remove errorneous use of UINT8_C
+
+UINT8_C should only be used for converting an integer literal to uint8_t,
+but 'no' is not an integer literal an is a uint8_t variable. If UINT8_C(v)
+is defined as 'v ## U`, then this fails to compile
+---
+ src/cpu/x64/jit_avx512_core_amx_conv_kernel.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/cpu/x64/jit_avx512_core_amx_conv_kernel.cpp b/src/cpu/x64/jit_avx512_core_amx_conv_kernel.cpp
+index 00792f450..9cc71b2ad 100644
+--- a/src/cpu/x64/jit_avx512_core_amx_conv_kernel.cpp
++++ b/src/cpu/x64/jit_avx512_core_amx_conv_kernel.cpp
+@@ -480,7 +480,7 @@ void jit_avx512_core_amx_copy_to_wbuffer_t::generate() {
+     const uint8_t nr = is_bf16 ? 2 : 4; // 2r or 4r
+     for (uint8_t o = 0; o < no; ++o) {
+         for (uint8_t r = 0; r < nr; r++) {
+-            const uint8_t index = o + r * UINT8_C(no);
++            const uint8_t index = o + r * no;
+             if (is_bf16)
+                 dw(index);
+             else
+-- 
+2.17.1
+
