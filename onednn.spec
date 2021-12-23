@@ -2,7 +2,7 @@
 
 Name:           onednn
 Version:        2.2
-Release:        2
+Release:        3
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
@@ -64,7 +64,7 @@ mkdir -p build && cd build
 %make_build
 
 %check
-ctest
+cd build && ctest
 
 %install
 cd build
@@ -101,6 +101,8 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 
 
 %changelog
+* Wed Dec 22 2021 baihuawei <baihuawei@huawei.com> - 2.2-3
+- Fix spec file.
 * Wed Dec 1 2021 baihuawei <baihuawei@huawei.com> - 2.2-2
 - Fix bugs.
 * Wed Sep 30 2021 baihuawei <baihuawei@huawei.com> - 2.2-1
