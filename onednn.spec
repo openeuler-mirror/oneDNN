@@ -1,17 +1,20 @@
 %global __cmake_in_source_build 1
 
 Name:           onednn
-Version:        1.6
+Version:        2.3.2
 Release:        1
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
 URL:            https://github.com/oneapi-src/oneDNN/
-Source0:        %{url}/archive/v%{version}/onednn-%{version}.tar.gz
+Source0:        %{url}/archive/v%{version}/v%{version}.tar.gz
+Patch0:         Use-__INTEL_COMPILER-guard.patch
+
 
 # This package only work in few arches for now
 ExclusiveArch:  x86_64 aarch64 ppc64le
 
+BuildRequires:  make
 BuildRequires:  cmake
 BuildRequires:  doxygen
 BuildRequires:  gcc-c++
@@ -76,13 +79,15 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 %files
 %license LICENSE THIRD-PARTY-PROGRAMS
 %doc README.md CONTRIBUTING.md CODE_OF_CONDUCT.md
-%{_libdir}/libdnnl.so.1
-%{_libdir}/libdnnl.so.1.*
-%{_libdir}/libmkldnn.so.1
-%{_libdir}/libmkldnn.so.1.*
+%{_libdir}/libdnnl.so.2
+%{_libdir}/libdnnl.so.2.*
+%{_libdir}/libmkldnn.so.2
+%{_libdir}/libmkldnn.so.2.*
 
 
 %files devel
+ %dir %{_includedir}/oneapi
+%{_includedir}/oneapi/dnnl
 %{_includedir}/mkldnn*.h*
 %{_includedir}/dnnl*.h*
 %{_libdir}/libdnnl.so
@@ -94,6 +99,9 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 
 
 %changelog
+
+* Thu Dec 30 2021 yangping69 <yangping69@huawei.com> - 2.3.2-1
+- Update version.
 
 * Sun Dec 13 2020 sinever <sinever@126.com> - 1.6-1
 - Initial spec file.
