@@ -1,0 +1,29 @@
+From 2654b133917480ff6860c4c8b4b9df11c9c95bf5 Mon Sep 17 00:00:00 2001
+From: Nicolas Chauvet <kwizart@gmail.com>
+Date: Tue, 17 Aug 2021 09:36:19 +0200
+Subject: [PATCH 2/2] Use __INTEL_COMPILER guard
+
+This fixes compilation on non-x86 arches
+
+Signed-off-by: Nicolas Chauvet <kwizart@gmail.com>
+---
+ src/gpu/jit/ngen/ngen_utils.hpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/gpu/jit/ngen/ngen_utils.hpp b/src/gpu/jit/ngen/ngen_utils.hpp
+index 508756a080fd..2b736927db35 100644
+--- a/src/gpu/jit/ngen/ngen_utils.hpp
++++ b/src/gpu/jit/ngen/ngen_utils.hpp
+@@ -19,7 +19,9 @@
+ 
+ #include <cstdint>
+ 
++#ifdef __INTEL_COMPILER
+ #include <immintrin.h>
++#endif
+ 
+ #ifdef _MSC_VER
+ #include <intrin.h>
+-- 
+2.31.1
+
