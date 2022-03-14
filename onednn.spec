@@ -2,17 +2,20 @@
 
 Name:           onednn
 Version:        2.3.2
-Release:        1
+Release:        2
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
 URL:            https://github.com/oneapi-src/oneDNN/
 Source0:        %{url}/archive/v%{version}/v%{version}.tar.gz
 Patch0:         Use-__INTEL_COMPILER-guard.patch
+%ifarch riscv64
+Patch10:        add-RISC-V-defines-and-fix-indentation.patch
+%endif
 
 
 # This package only work in few arches for now
-ExclusiveArch:  x86_64 aarch64 ppc64le
+ExclusiveArch:  x86_64 aarch64 ppc64le riscv64
 
 BuildRequires:  make
 BuildRequires:  cmake
@@ -99,6 +102,8 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 
 
 %changelog
+* Mon Mar 14 2022 laokz <laokz@foxmail.com> - 2.3.2-2
+- Apply upstream commit to support riscv64 target.
 
 * Thu Dec 30 2021 yangping69 <yangping69@huawei.com> - 2.3.2-1
 - Update version.
