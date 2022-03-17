@@ -1,0 +1,164 @@
+commit c47c8512ff2b29413554b59dad689efb859c9e9c
+Author: Aaron Franke <arnfranke@yahoo.com>
+Date:   Wed Sep 1 19:49:43 2021 -0500
+
+    cpu: risc-v: add RISC-V defines and fix indentation
+---
+Rebased on 2.3.2 by laokz <laokz@foxmail.com>
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5a3bf78a7..6f3dfe5de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -107,6 +107,8 @@
+         set(DNNL_TARGET_ARCH "PPC64")
+     elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x.*|S390X.*)")
+         set(DNNL_TARGET_ARCH "S390X")
++    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(rv.*|RV.*|riscv.*|RISCV.*)")
++        set(DNNL_TARGET_ARCH "RV64")
+     else()
+         set(DNNL_TARGET_ARCH "X64")
+     endif()
+diff --git a/README.md b/README.md
+index 730e6e023..dd8d92efd 100644
+--- a/README.md
++++ b/README.md
+@@ -85,11 +85,12 @@
+ - [Arm 64-bit Architecture (AArch64)](https://developer.arm.com/architectures/cpu-architecture/a-profile).
+ - [OpenPOWER](https://openpowerfoundation.org/) / [IBM Power ISA](https://en.wikipedia.org/wiki/Power_ISA).
+ - [IBMz z/Architecture (s390x)](https://en.wikipedia.org/wiki/Z/Architecture).
++- [RISC-V 64-bit (RV64)](https://en.wikipedia.org/wiki/RISC-V).
+
+ > **WARNING**
+ >
+-> Arm 64-bit Architecture (AArch64), Power ISA (PPC64) and IBMz (s390x) support
+-> is **experimental** with limited testing validation.
++> Arm 64-bit Architecture (AArch64), Power ISA (PPC64), IBMz (s390x),
++> and RISC-V (RV64) support is **experimental** with limited testing validation.
+
+ The library is optimized for the following CPUs:
+ * Intel Atom processor with Intel SSE4.1 support
+diff --git a/cmake/platform.cmake b/cmake/platform.cmake
+index c815e7d4a..129434d5a 100644
+--- a/cmake/platform.cmake
++++ b/cmake/platform.cmake
+@@ -258,33 +258,36 @@
+
+     elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+         if(DNNL_TARGET_ARCH STREQUAL "AARCH64")
+-             if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+-                 set(DEF_ARCH_OPT_FLAGS "-O3")
+-             endif()
+-             # For native compilation tune for the host processor
+-             if (CMAKE_SYSTEM_PROCESSOR STREQUAL CMAKE_HOST_SYSTEM_PROCESSOR)
+-                 append(DEF_ARCH_OPT_FLAGS "-mcpu=native")
+-             endif()
++            if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
++                set(DEF_ARCH_OPT_FLAGS "-O3")
++            endif()
++            # For native compilation tune for the host processor
++            if (CMAKE_SYSTEM_PROCESSOR STREQUAL CMAKE_HOST_SYSTEM_PROCESSOR)
++                append(DEF_ARCH_OPT_FLAGS "-mcpu=native")
++            endif()
+         elseif(DNNL_TARGET_ARCH STREQUAL "PPC64")
+-             if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+-                 set(DEF_ARCH_OPT_FLAGS "-O3")
+-             endif()
+-             # In GCC, -ftree-vectorize is turned on under -O3 since 2007.
+-             # For native compilation tune for the host processor
+-             if (CMAKE_SYSTEM_PROCESSOR STREQUAL CMAKE_HOST_SYSTEM_PROCESSOR)
+-                 append(DEF_ARCH_OPT_FLAGS "-mcpu=native")
+-             endif()
++            if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
++                set(DEF_ARCH_OPT_FLAGS "-O3")
++            endif()
++            # In GCC, -ftree-vectorize is turned on under -O3 since 2007.
++            # For native compilation tune for the host processor
++            if (CMAKE_SYSTEM_PROCESSOR STREQUAL CMAKE_HOST_SYSTEM_PROCESSOR)
++                append(DEF_ARCH_OPT_FLAGS "-mcpu=native")
++            endif()
+         elseif(DNNL_TARGET_ARCH STREQUAL "S390X")
+-             if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+-                 set(DEF_ARCH_OPT_FLAGS "-O3")
+-             endif()
+-             # In GCC, -ftree-vectorize is turned on under -O3 since 2007.
+-             # For native compilation tune for the host processor
+-             if (CMAKE_SYSTEM_PROCESSOR STREQUAL CMAKE_HOST_SYSTEM_PROCESSOR)
+-                 append(DEF_ARCH_OPT_FLAGS "-march=native")
+-             endif()
++            if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
++                set(DEF_ARCH_OPT_FLAGS "-O3")
++            endif()
++            # In GCC, -ftree-vectorize is turned on under -O3 since 2007.
++            # For native compilation tune for the host processor
++            if (CMAKE_SYSTEM_PROCESSOR STREQUAL CMAKE_HOST_SYSTEM_PROCESSOR)
++                append(DEF_ARCH_OPT_FLAGS "-march=native")
++            endif()
++        elseif(DNNL_TARGET_ARCH STREQUAL "RV64")
++            # G = General-purpose extensions, C = Compression extension (very common).
++            append(DEF_ARCH_OPT_FLAGS "-march=rv64gc")
+         elseif(DNNL_TARGET_ARCH STREQUAL "X64")
+-             platform_gnu_x64_arch_ccxx_flags(DEF_ARCH_OPT_FLAGS)
++            platform_gnu_x64_arch_ccxx_flags(DEF_ARCH_OPT_FLAGS)
+         endif()
+         platform_gnu_nowarn_ccxx_flags(CMAKE_CCXX_NOWARN_FLAGS)
+     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+diff --git a/src/cpu/README.md b/src/cpu/README.md
+index 7919c29d5..798aff475 100644
+--- a/src/cpu/README.md
++++ b/src/cpu/README.md
+@@ -45,6 +45,7 @@ enable or disable parts of code. There the following macros defined:
+ - `DNNL_AARCH64` is 1 on Arm AArch64 architecture;
+ - `DNNL_PPC64` is 1 on OpenPOWER / IBM Power architecture;
+ - `DNNL_S390X` is 1 on IBMz / s390x architecture;
++- `DNNL_RV64` is 1 on RISC-V architecture;
+ - `DNNL_ARCH_GENERIC` is 1 on other platforms.
+ Only one of the macros above is defined to 1. All others are defined to 0.
+ 
+diff --git a/src/cpu/platform.hpp b/src/cpu/platform.hpp
+index d3ff82301..0acdb14e0 100644
+--- a/src/cpu/platform.hpp
++++ b/src/cpu/platform.hpp
+@@ -28,11 +28,13 @@
+ // - DNNL_AARCH64
+ // - DNNL_PPC64
+ // - DNNL_S390X
++// - DNNL_RV64
+ // - DNNL_ARCH_GENERIC
+ // Target architecture macro is set to 1, others to 0. All macros are defined.
+ 
+ #if defined(DNNL_X64) + defined(DNNL_AARCH64) + defined(DNNL_PPC64) \
+-                + defined(DNNL_S390X) + defined(DNNL_ARCH_GENERIC) \
++                + defined(DNNL_S390X) + defined(DNNL_RV64) \
++                + defined(DNNL_ARCH_GENERIC) \
+         == 0
+ #if defined(__x86_64__) || defined(_M_X64)
+ #define DNNL_X64 1
+@@ -42,13 +44,16 @@
+ #define DNNL_PPC64 1
+ #elif defined(__s390x__)
+ #define DNNL_S390X 1
++#elif defined(__riscv)
++#define DNNL_RV64 1
+ #else
+ #define DNNL_ARCH_GENERIC 1
+ #endif
+ #endif // defined(DNNL_X64) + ... == 0
+ 
+ #if defined(DNNL_X64) + defined(DNNL_AARCH64) + defined(DNNL_PPC64) \
+-                + defined(DNNL_S390X) + defined(DNNL_ARCH_GENERIC) \
++                + defined(DNNL_S390X) + defined(DNNL_RV64) \
++                + defined(DNNL_ARCH_GENERIC) \
+         != 1
+ #error One and only one architecture should be defined at a time
+ #endif
+@@ -65,6 +70,9 @@
+ #if !defined(DNNL_S390X)
+ #define DNNL_S390X 0
+ #endif
++#if !defined(DNNL_RV64)
++#define DNNL_RV64 0
++#endif
+ #if !defined(DNNL_ARCH_GENERIC)
+ #define DNNL_ARCH_GENERIC 0
+ #endif
