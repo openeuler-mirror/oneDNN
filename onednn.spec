@@ -1,21 +1,17 @@
 %global __cmake_in_source_build 1
 
 Name:           onednn
-Version:        2.2
-Release:        3
+Version:        2.6
+Release:        1
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
 URL:            https://github.com/oneapi-src/oneDNN/
 Source0:        %{url}/archive/v%{version}/onednn-%{version}.tar.gz
 
-Patch0:         0001-tests-fix-build-issues-on-QNX.patch
-Patch1:         0002-build-fix-to-include-path-for-ArmPL-builds.-1111.patch
-Patch2:         0003-cpu-aarch64-missing-include-for-arm_compute-Schedule.patch
-Patch3:         0004-cpu-x64-amx-Remove-errorneous-use-of-UINT8_C.patch
 
-# This package only work in few arches for now
-ExclusiveArch:  x86_64 aarch64 ppc64le
+# This package only work in 64bit arches for now
+ExclusiveArch:  x86_64 aarch64 
 
 BuildRequires:  cmake doxygen gcc-c++
 
@@ -83,24 +79,18 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 %doc README.md CONTRIBUTING.md CODE_OF_CONDUCT.md
 %{_libdir}/libdnnl.so.2
 %{_libdir}/libdnnl.so.2.*
-%{_libdir}/libmkldnn.so.2
-%{_libdir}/libmkldnn.so.2.*
-
 
 %files devel
-%{_includedir}/mkldnn*.h*
+%dir %{_includedir}/oneapi
+%{_includedir}/oneapi/dnnl
 %{_includedir}/dnnl*.h*
-%dir %{_includedir}/oneapi/dnnl
-%{_includedir}/oneapi/dnnl/*
 %{_libdir}/libdnnl.so
-%{_libdir}/libmkldnn.so
 %dir %{_libdir}/cmake/dnnl
 %{_libdir}/cmake/dnnl/*.cmake
-%dir %{_libdir}/cmake/mkldnn
-%{_libdir}/cmake/mkldnn/*.cmake
-
 
 %changelog
+* Sat Aug 6 2022 wisespreading <wisespreading@gmail.com> - 2.6-1
+- Update to 2.6 for AMX
 * Wed Dec 22 2021 baihuawei <baihuawei@huawei.com> - 2.2-3
 - Fix spec file.
 * Wed Dec 1 2021 baihuawei <baihuawei@huawei.com> - 2.2-2
