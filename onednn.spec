@@ -1,15 +1,13 @@
 %global __cmake_in_source_build 1
 
 Name:           onednn
-Version:        2.3.2
+Version:        2.2
 Release:        1
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
 URL:            https://github.com/oneapi-src/oneDNN/
-Source0:        %{url}/archive/v%{version}/v%{version}.tar.gz
-Patch0:         Use-__INTEL_COMPILER-guard.patch
-
+Source0:        %{url}/archive/v%{version}/onednn-%{version}.tar.gz
 
 # This package only work in few arches for now
 ExclusiveArch:  x86_64 aarch64 ppc64le
@@ -99,9 +97,5 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 
 
 %changelog
-
-* Thu Dec 30 2021 yangping69 <yangping69@huawei.com> - 2.3.2-1
+* Tue Sep 20 2022 baihuawei <baihuawei@huawei.com> - 2.2-1
 - Update version.
-
-* Sun Dec 13 2020 sinever <sinever@126.com> - 1.6-1
-- Initial spec file.
