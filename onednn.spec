@@ -2,7 +2,7 @@
 
 Name:           onednn
 Version:        2.6
-Release:        1
+Release:        2
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
@@ -11,7 +11,7 @@ Source0:        %{url}/archive/v%{version}/onednn-%{version}.tar.gz
 
 
 # This package only work in 64bit arches for now
-ExclusiveArch:  x86_64 aarch64 
+ExclusiveArch:  x86_64 aarch64 riscv64
 
 BuildRequires:  cmake doxygen gcc-c++
 
@@ -89,6 +89,8 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 %{_libdir}/cmake/dnnl/*.cmake
 
 %changelog
+* Wed Feb 8 2023 laokz <zhangkai@iscas.ac.cn> - 2.6-2
+- Add riscv64 to ExclusiveArch.
 * Sat Aug 6 2022 wisespreading <wisespreading@gmail.com> - 2.6-1
 - Update to 2.6 for AMX
 * Thu Dec 30 2021 yangping69 <yangping69@huawei.com> - 2.3.2-1
