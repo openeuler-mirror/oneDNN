@@ -1,0 +1,14 @@
+diff -u -r oneDNN-2.6/cmake/OpenMP.cmake oneDNN-2.6/cmake/OpenMP.cmake
+--- oneDNN-2.6/cmake/OpenMP.cmake	2022-03-30 04:26:28.000000000 +0800
++++ oneDNN-2.6/cmake/OpenMP.cmake	2023-06-29 10:47:55.000000000 +0800
+@@ -23,8 +23,8 @@
+ set(OpenMP_cmake_included true)
+ include("cmake/Threading.cmake")
+ 
+-if (APPLE AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+-    # OSX Clang doesn't have OpenMP by default.
++if ((APPLE OR UNIX) AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++		# OSX, UNIX Clang doesn't have OpenMP by default.
+     # But we still want to build the library.
+     set(_omp_severity "WARNING")
+ else()

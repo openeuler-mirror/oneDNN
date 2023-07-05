@@ -2,12 +2,13 @@
 
 Name:           onednn
 Version:        2.6
-Release:        1
+Release:        2
 Summary:        Deep Neural Network Library
 
 License:        ASL 2.0 and BSD and Boost and MIT
 URL:            https://github.com/oneapi-src/oneDNN/
 Source0:        %{url}/archive/v%{version}/onednn-%{version}.tar.gz
+Patch0:         fix-clang.patch
 
 
 # This package only work in 64bit arches for now
@@ -89,6 +90,8 @@ rm -rf %{buildroot}%{_docdir}/dnnl
 %{_libdir}/cmake/dnnl/*.cmake
 
 %changelog
+* Thu Jun 29 2023 yoo <sunyuechi@iscas.ac.cn> - 2.6-2
+- fix clang build error: omp
 * Sat Aug 6 2022 wisespreading <wisespreading@gmail.com> - 2.6-1
 - Update to 2.6 for AMX
 * Wed Dec 22 2021 baihuawei <baihuawei@huawei.com> - 2.2-3
